@@ -64,26 +64,55 @@ void valueFrequency(int valFreq[],Statistician answer, int count){
 }
 void mode(int valFreq[],int freq[],int *freqsize, Statistician answer, int count){
 	int i;
-	
+	int hasmode = 0,freq_count=0;
+	*freqsize=0;
+	for(i=0;i<9;i++) freq[i] = 0;
 	valueFrequency(valFreq,answer,count);
+	
 	int mode_val = max(valFreq,9);
 	int mode_flag[9] = {0};
-	printf("Mode value: %d\n",mode_val);
+	
 	for(i=0;i<9;i++){
+		if(valFreq[i] > 0){
+			freq_count++;
+		}
 		if(valFreq[i] == mode_val && mode_flag[i]== 0){
 			mode_flag[i] = 1;
-			for(i=0;i<9;i++)printf("%d,",mode_flag[i]);
 			*freqsize = *freqsize + 1;
 			freq[*freqsize-1] = i+1;
 		}
 	}
-	
+	if(freq_count == *freqsize){
+		
+		for(i=0;i<0;i++){
+			freq[i] = 0;
+		}
+		*freqsize = 0;
+	}
 	return;
 }
-void histogram(Statistician answer, int count);
-/*
-	Displays the frequencies of answers in a graphical manner.
-*/
+void histogram(Statistician answer, int count){
+	int i,j,n=0;
+	int valFreq[9] = {0};
+	
+	valueFrequency(valFreq,answer,count);
+	for(i=0;i<9;i++){
+		if(valFreq[i] > n) n = valFreq[i];
+	}
+	printf("\tH O R I Z O N T A L H I S T O G R A M\n");
+	for(i=9;i>0;i--){
+		printf("%d | ",i);
+//		printf("%d",answer[count-1]);
+		for(j=0;j<valFreq[i-1];j++){
+			printf("* ");
+		}
+		printf("\n");
+	}
+	printf("   ",n);
+	for(i=0;i<n+5;i++) printf("%d ",i+1);
+	printf("\n");
+	return;
+}
 void displayHeader(){
 	printf("SURVEY MASTER 1000\n\n");
 }
@@ -158,11 +187,17 @@ void runProgram(){
 					system("pause");
 					break;
 			case 7: mode(vf,freq,&freqsize,answer,count);
-					printf("The mode/modes: {");
-					for(i=0;i<freqsize;i++){
-					printf(" %d ",freq[i]);
-					}
-					printf("}\n");
+					if(freqsize > 0){
+						printf("The mode/modes: {");
+						for(i=0;i<freqsize;i++){
+						printf(" %d ",freq[i]);
+							printf("}\n");
+						}
+					}else printf("No modes for the set data\n");
+				
+					system("pause");
+					break;
+			case 8: histogram(answer,count);
 					system("pause");
 					break;
 	}
